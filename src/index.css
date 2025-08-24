@@ -1,5 +1,1 @@
 @import "tailwindcss";
-
-body {
-  @apply bg-blue-200 cursor-crosshair h-screen w-screen;
-}
