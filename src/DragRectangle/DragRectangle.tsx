@@ -27,7 +27,7 @@ export default function DragRectangle(): JSX.Element {
   const [rectangle, setRectangle] = useState<Rectangle | null>(null); // for showing rectangle after created
   const [rectangleList, setRectangleList] = useState<Rectangle[]>([]); // for creating array of rectangle
 
-  const [color, setColor] = useState<string | null>(null);
+  const [color, setColor] = useState<string>("gray");
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (isInside) {
@@ -51,7 +51,7 @@ export default function DragRectangle(): JSX.Element {
         Y: y,
         height: h,
         width: w,
-        color: color ? color : "gray",
+        color: color,
       });
     }
   };

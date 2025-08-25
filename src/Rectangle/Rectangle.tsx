@@ -34,6 +34,10 @@ export default function Rectangle({
     y: top,
   });
 
+  useEffect(() => {
+    setCurrentPosition({ x: left, y: top });
+  }, [left, top]);
+
   useEffect((): void | (() => void) => {
     const handleMouseMove = (e: MouseEvent): void => {
       if (!grab) return;
