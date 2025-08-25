@@ -32,8 +32,8 @@ export default function Rectangle({
     y: top,
   });
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+  useEffect((): void | (() => void) => {
+    const handleMouseMove = (e: MouseEvent): void => {
       if (!grab) return;
       let x = e.clientX - dragOffset.x;
       let y = e.clientY - dragOffset.y;
@@ -49,7 +49,7 @@ export default function Rectangle({
       setCurrentPosition({ x, y });
     };
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (): void => {
       if (!grab) return;
       setGrab(false);
       setIsInside?.(false);

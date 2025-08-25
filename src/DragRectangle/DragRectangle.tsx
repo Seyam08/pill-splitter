@@ -55,7 +55,6 @@ export default function DragRectangle(): JSX.Element {
     setRectangle(null);
   };
 
-  console.log("component render");
   return (
     <>
       <div
