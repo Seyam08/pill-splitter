@@ -12,6 +12,7 @@ type RectangleProps = {
   width: number;
   height: number;
   id: string;
+  color: string;
   setIsInside?: React.Dispatch<React.SetStateAction<boolean>>;
   setRectangleList?: React.Dispatch<React.SetStateAction<Rectangle[]>>;
 };
@@ -22,6 +23,7 @@ export default function Rectangle({
   width,
   height,
   id,
+  color,
   setIsInside,
   setRectangleList,
 }: RectangleProps): JSX.Element {
@@ -87,7 +89,7 @@ export default function Rectangle({
 
   return (
     <div
-      className={`absolute border border-gray-500 bg-amber-500 opacity-65 rounded-2xl ${
+      className={`absolute border border-gray-500 opacity-65 rounded-2xl ${
         grab ? "cursor-grabbing" : "cursor-grab"
       }`}
       onMouseDown={onMouseDown}
@@ -96,6 +98,7 @@ export default function Rectangle({
         top: `${currentPosition.y}px`,
         width: `${width}px`,
         height: `${height}px`,
+        backgroundColor: color,
       }}
     />
   );

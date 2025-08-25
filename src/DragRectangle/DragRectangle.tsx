@@ -1,6 +1,7 @@
 import { useRef, useState, type JSX } from "react";
 import CrossLine from "../CrossLine/CrossLine";
 import Rectangle from "../Rectangle/Rectangle";
+import { getRandomColor } from "../util/getRandomColor";
 import { randomId } from "../util/randomId";
 
 export type Rectangle = {
@@ -9,6 +10,7 @@ export type Rectangle = {
   Y: number;
   height: number;
   width: number;
+  color: string;
 };
 export type StartPoint = {
   X: number;
@@ -25,12 +27,15 @@ export default function DragRectangle(): JSX.Element {
   const [rectangle, setRectangle] = useState<Rectangle | null>(null); // for showing rectangle after created
   const [rectangleList, setRectangleList] = useState<Rectangle[]>([]); // for creating array of rectangle
 
+  const [color, setColor] = useState<string | null>(null);
+
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (isInside) {
       return;
     }
     setIsDrawing(true);
     startPoint.current = { X: e.clientX, Y: e.clientY };
+    setColor(getRandomColor());
   };
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>): void => {
@@ -46,6 +51,7 @@ export default function DragRectangle(): JSX.Element {
         Y: y,
         height: h,
         width: w,
+        color: color ? color : "gray",
       });
     }
   };
@@ -74,6 +80,7 @@ export default function DragRectangle(): JSX.Element {
               left={rect?.X}
               top={rect?.Y}
               id={rect?.id}
+              color={rect?.color}
               setIsInside={setIsInside}
               setRectangleList={setRectangleList}
             />
@@ -86,6 +93,7 @@ export default function DragRectangle(): JSX.Element {
             left={rectangle?.X}
             top={rectangle?.Y}
             id={rectangle?.id}
+            color={rectangle?.color}
           />
         )}
       </div>
