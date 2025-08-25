@@ -1,4 +1,5 @@
 import { useRef, useState, type JSX } from "react";
+import CrossLine from "../CrossLine/CrossLine";
 import Rectangle from "../Rectangle/Rectangle";
 import { randomId } from "../util/randomId";
 
@@ -63,6 +64,7 @@ export default function DragRectangle(): JSX.Element {
         onMouseMove={onMouseMove}
         className="bg-blue-200 cursor-crosshair h-screen w-screen relative"
       >
+        <CrossLine />
         {rectangleList.map((rect: Rectangle): JSX.Element => {
           return (
             <Rectangle
