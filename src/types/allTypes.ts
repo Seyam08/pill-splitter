@@ -5,6 +5,7 @@ export type RectangleType = {
   height: number;
   width: number;
   color: string;
+  borderRadius: string;
 };
 export type StartPoint = {
   X: number;
@@ -13,14 +14,15 @@ export type StartPoint = {
 export type Position = {
   x: number;
   y: number;
-  height?: number;
-  width?: number;
+  height: number;
+  width: number;
 };
 export type RectangleProps = {
   left: number;
   top: number;
   width: number;
   height: number;
+  borderRadius: string;
   id: string;
   color: string;
   isDrawing: boolean;
@@ -31,5 +33,5 @@ export type RectangleProps = {
 
 export type RectangleDrawProps = Pick<
   RectangleProps,
-  "left" | "top" | "width" | "height" | "color"
+  "left" | "top" | "width" | "height" | "color" | "borderRadius"
 >;

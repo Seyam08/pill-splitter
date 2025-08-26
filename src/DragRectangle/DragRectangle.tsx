@@ -47,6 +47,7 @@ export default function DragRectangle(): JSX.Element {
         height: h,
         width: w,
         color: color,
+        borderRadius: "16px 16px 16px 16px",
       });
     }
   };
@@ -58,6 +59,8 @@ export default function DragRectangle(): JSX.Element {
     setTimeout(() => (draggingRef.current = false), 0);
   };
 
+  // console.log(rectangleList);
+
   return (
     <>
       <div
@@ -67,30 +70,34 @@ export default function DragRectangle(): JSX.Element {
         className="bg-blue-200 cursor-crosshair h-screen w-screen relative"
       >
         <CrossLine />
-        {rectangleList.map((rect: RectangleType): JSX.Element => {
-          return (
-            <Rectangle
-              key={rect?.id}
-              height={rect?.height}
-              width={rect?.width}
-              left={rect?.X}
-              top={rect?.Y}
-              id={rect?.id}
-              color={rect?.color}
-              isDrawing={isDrawing}
-              draggingRef={draggingRef}
-              setIsInside={setIsInside}
-              setRectangleList={setRectangleList}
-            />
-          );
-        })}
+        {rectangleList.map(
+          (rect: RectangleType, index: number): JSX.Element => {
+            return (
+              <Rectangle
+                key={index}
+                height={rect.height}
+                width={rect.width}
+                left={rect.X}
+                top={rect.Y}
+                borderRadius={rect.borderRadius}
+                id={rect.id}
+                color={rect.color}
+                isDrawing={isDrawing}
+                draggingRef={draggingRef}
+                setIsInside={setIsInside}
+                setRectangleList={setRectangleList}
+              />
+            );
+          }
+        )}
         {rectangle && (
           <RectangleDraw
-            height={rectangle?.height}
-            width={rectangle?.width}
-            left={rectangle?.X}
-            top={rectangle?.Y}
-            color={rectangle?.color}
+            height={rectangle.height}
+            width={rectangle.width}
+            left={rectangle.X}
+            top={rectangle.Y}
+            borderRadius={rectangle.borderRadius}
+            color={rectangle.color}
           />
         )}
         <ClearAll setRectangleList={setRectangleList} />
