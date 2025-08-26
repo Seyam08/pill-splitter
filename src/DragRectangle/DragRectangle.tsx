@@ -1,4 +1,5 @@
 import { useRef, useState, type JSX } from "react";
+import ClearAll from "../ClearAll/ClearAll";
 import CrossLine from "../CrossLine/CrossLine";
 import Rectangle from "../Rectangle/Rectangle";
 import RectangleDraw from "../Rectangle/RectangleDraw";
@@ -92,6 +93,7 @@ export default function DragRectangle(): JSX.Element {
             color={rectangle?.color}
           />
         )}
+        <ClearAll setRectangleList={setRectangleList} />
       </div>
     </>
   );
