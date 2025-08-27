@@ -69,128 +69,123 @@ export default function DragRectangle(): JSX.Element {
       prev.forEach((rect) => {
         const cutX = e.clientX > rect.X && e.clientX < rect.X + rect.width;
         const cutY = e.clientY > rect.Y && e.clientY < rect.Y + rect.height;
+        const measure = 40;
 
         if (cutX || cutY) {
           if (cutX && cutY) {
-            // split into 4
+            // 4-way split
             const topHeight = e.clientY - rect.Y;
             const bottomHeight = rect.height - topHeight;
             const leftWidth = e.clientX - rect.X;
             const rightWidth = rect.width - leftWidth;
-            const firstRect: RectangleType = {
-              id: randomId(),
-              X: rect.X,
-              Y: rect.Y,
-              width: leftWidth,
-              height: topHeight,
-              color: rect.color,
-              borderRadius: `${rect.borderRadius.split(" ")[0]} 0 0 0`,
-            };
-            const secondRect: RectangleType = {
-              id: randomId(),
-              X: e.clientX,
-              Y: rect.Y,
-              width: rightWidth,
-              height: topHeight,
-              color: rect.color,
-              borderRadius: `0 ${rect.borderRadius.split(" ")[1]} 0 0`,
-            };
-            const thirdRect: RectangleType = {
-              id: randomId(),
-              X: rect.X,
-              Y: e.clientY,
-              width: leftWidth,
-              height: bottomHeight,
-              color: rect.color,
-              borderRadius: `0 0 0 ${rect.borderRadius.split(" ")[3]}`,
-            };
+            const measure = 60;
+            // check too small
+            if (rect.width < measure || rect.height < measure) {
+              newRects.push(moveIfTooSmall(rect, measure));
+            } else {
+              const firstRect: RectangleType = {
+                id: randomId(),
+                X: rect.X,
+                Y: rect.Y,
+                width: leftWidth,
+                height: topHeight,
+                color: rect.color,
+                borderRadius: `${rect.borderRadius.split(" ")[0]} 0 0 0`,
+              };
+              const secondRect: RectangleType = {
+                id: randomId(),
+                X: e.clientX,
+                Y: rect.Y,
+                width: rightWidth,
+                height: topHeight,
+                color: rect.color,
+                borderRadius: `0 ${rect.borderRadius.split(" ")[1]} 0 0`,
+              };
+              const thirdRect: RectangleType = {
+                id: randomId(),
+                X: rect.X,
+                Y: e.clientY,
+                width: leftWidth,
+                height: bottomHeight,
+                color: rect.color,
+                borderRadius: `0 0 0 ${rect.borderRadius.split(" ")[3]}`,
+              };
+              const fourthRect: RectangleType = {
+                id: randomId(),
+                X: e.clientX,
+                Y: e.clientY,
+                width: rightWidth,
+                height: bottomHeight,
+                color: rect.color,
+                borderRadius: `0 0 ${rect.borderRadius.split(" ")[2]} 0`,
+              };
 
-            const fourthRect: RectangleType = {
-              id: randomId(),
-              X: e.clientX,
-              Y: e.clientY,
-              width: rightWidth,
-              height: bottomHeight,
-              color: rect.color,
-              borderRadius: `0 0 ${rect.borderRadius.split(" ")[2]} 0`,
-            };
-
-            const adjustedFirstRect: RectangleType = moveIfTooSmall(firstRect);
-            const adjustedSecondRect: RectangleType =
-              moveIfTooSmall(secondRect);
-            const adjustedThirdRect: RectangleType = moveIfTooSmall(thirdRect);
-            const adjustedFourthRect: RectangleType =
-              moveIfTooSmall(fourthRect);
-
-            newRects.push(
-              adjustedFirstRect,
-              adjustedSecondRect,
-              adjustedThirdRect,
-              adjustedFourthRect
-            );
+              newRects.push(firstRect, secondRect, thirdRect, fourthRect);
+            }
           } else if (cutX) {
-            // vertical split
             const leftWidth = e.clientX - rect.X;
             const rightWidth = rect.width - leftWidth;
-            const firstRect: RectangleType = {
-              id: randomId(),
-              X: rect.X,
-              Y: rect.Y,
-              width: leftWidth,
-              height: rect.height,
-              color: rect.color,
-              borderRadius: `${rect.borderRadius.split(" ")[0]} 0 0 ${
-                rect.borderRadius.split(" ")[3]
-              }`,
-            };
-            const secondRect: RectangleType = {
-              id: randomId(),
-              X: e.clientX,
-              Y: rect.Y,
-              width: rightWidth,
-              height: rect.height,
-              color: rect.color,
-              borderRadius: `0 ${rect.borderRadius.split(" ")[1]} ${
-                rect.borderRadius.split(" ")[2]
-              } 0`,
-            };
 
-            const adjustedFirstRect: RectangleType = moveIfTooSmall(firstRect);
-            const adjustedSecondRect: RectangleType =
-              moveIfTooSmall(secondRect);
+            if (rect.width < measure) {
+              newRects.push(moveIfTooSmall(rect, measure));
+            } else {
+              const firstRect: RectangleType = {
+                id: randomId(),
+                X: rect.X,
+                Y: rect.Y,
+                width: leftWidth,
+                height: rect.height,
+                color: rect.color,
+                borderRadius: `${rect.borderRadius.split(" ")[0]} 0 0 ${
+                  rect.borderRadius.split(" ")[3]
+                }`,
+              };
+              const secondRect: RectangleType = {
+                id: randomId(),
+                X: e.clientX,
+                Y: rect.Y,
+                width: rightWidth,
+                height: rect.height,
+                color: rect.color,
+                borderRadius: `0 ${rect.borderRadius.split(" ")[1]} ${
+                  rect.borderRadius.split(" ")[2]
+                } 0`,
+              };
 
-            newRects.push(adjustedFirstRect, adjustedSecondRect);
+              newRects.push(firstRect, secondRect);
+            }
           } else if (cutY) {
-            // horizontal split
             const topHeight = e.clientY - rect.Y;
             const bottomHeight = rect.height - topHeight;
-            const firstRect: RectangleType = {
-              id: randomId(),
-              X: rect.X,
-              Y: rect.Y,
-              width: rect.width,
-              height: topHeight,
-              color: rect.color,
-              borderRadius: `${rect.borderRadius.split(" ")[0]} ${
-                rect.borderRadius.split(" ")[1]
-              } 0 0`,
-            };
-            const secondRect: RectangleType = {
-              id: randomId(),
-              X: rect.X,
-              Y: e.clientY,
-              width: rect.width,
-              height: bottomHeight,
-              color: rect.color,
-              borderRadius: `0 0 ${rect.borderRadius.split(" ")[2]} ${
-                rect.borderRadius.split(" ")[3]
-              }`,
-            };
-            const adjustedFirstRect: RectangleType = moveIfTooSmall(firstRect);
-            const adjustedSecondRect: RectangleType =
-              moveIfTooSmall(secondRect);
 
-            newRects.push(adjustedFirstRect, adjustedSecondRect);
+            if (rect.height < measure) {
+              newRects.push(moveIfTooSmall(rect, measure));
+            } else {
+              const firstRect: RectangleType = {
+                id: randomId(),
+                X: rect.X,
+                Y: rect.Y,
+                width: rect.width,
+                height: topHeight,
+                color: rect.color,
+                borderRadius: `${rect.borderRadius.split(" ")[0]} ${
+                  rect.borderRadius.split(" ")[1]
+                } 0 0`,
+              };
+              const secondRect: RectangleType = {
+                id: randomId(),
+                X: rect.X,
+                Y: e.clientY,
+                width: rect.width,
+                height: bottomHeight,
+                color: rect.color,
+                borderRadius: `0 0 ${rect.borderRadius.split(" ")[2]} ${
+                  rect.borderRadius.split(" ")[3]
+                }`,
+              };
+
+              newRects.push(firstRect, secondRect);
+            }
           }
         } else {
           // no cut → keep rectangle as is
