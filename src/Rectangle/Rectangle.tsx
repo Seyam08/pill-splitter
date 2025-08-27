@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, type JSX } from "react";
+import React, { useEffect, useState, type JSX } from "react";
 import type {
   Position,
   RectangleProps,
@@ -29,7 +29,6 @@ export default function Rectangle({
     height: height,
     width: width,
   });
-  const rectRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setCurrentPosition({ x: left, y: top, height: height, width: width });
@@ -94,22 +93,24 @@ export default function Rectangle({
   };
 
   useEffect((): void | (() => void) => {
-    const rect = rectRef.current?.getBoundingClientRect();
-
-    if (rect && !isDrawing && !grab) {
+    if (!isDrawing && !grab) {
       const onClickHandler = (e: MouseEvent): void => {
         if (draggingRef.current) return;
-        const cutX = e.clientX > rect.left && e.clientX < rect.right;
-        const cutY = e.clientY > rect.top && e.clientY < rect.bottom;
+        const cutX =
+          e.clientX > currentPosition.x &&
+          e.clientX < currentPosition.x + currentPosition.width;
+        const cutY =
+          e.clientY > currentPosition.y &&
+          e.clientY < currentPosition.y + currentPosition.height;
         // console.log(rect);
         // console.log({ clientX: e.clientX, clientY: e.clientY });
         // console.log({ id, cutX, cutY });
         if (cutY && !cutX) {
           const firstId = randomId();
-          const firstX = rect.x;
-          const firstY = rect.y;
-          const firstHeight = e.clientY - rect.y;
-          const firstWidth = rect.width;
+          const firstX = currentPosition.x;
+          const firstY = currentPosition.y;
+          const firstHeight = e.clientY - currentPosition.y;
+          const firstWidth = currentPosition.width;
           const firstRect: RectangleType = {
             id: firstId,
             X: firstX,
@@ -123,10 +124,11 @@ export default function Rectangle({
           };
 
           const secondId = randomId();
-          const secondX = rect.x;
+          const secondX = currentPosition.x;
           const secondY = e.clientY;
-          const secondHeight = rect.bottom - e.clientY;
-          const secondWidth = rect.width;
+          const secondHeight =
+            currentPosition.y + currentPosition.height - e.clientY;
+          const secondWidth = currentPosition.width;
           const secondRect: RectangleType = {
             id: secondId,
             X: secondX,
@@ -147,10 +149,10 @@ export default function Rectangle({
         }
         if (cutX && !cutY) {
           const firstId = randomId();
-          const firstX = rect.x;
-          const firstY = rect.y;
-          const firstHeight = rect.height;
-          const firstWidth = e.clientX - rect.x;
+          const firstX = currentPosition.x;
+          const firstY = currentPosition.y;
+          const firstHeight = currentPosition.height;
+          const firstWidth = e.clientX - currentPosition.x;
           const firstRect: RectangleType = {
             id: firstId,
             X: firstX,
@@ -165,9 +167,10 @@ export default function Rectangle({
 
           const secondId = randomId();
           const secondX = e.clientX;
-          const secondY = rect.y;
-          const secondHeight = rect.height;
-          const secondWidth = rect.right - e.clientX;
+          const secondY = currentPosition.y;
+          const secondHeight = currentPosition.height;
+          const secondWidth =
+            currentPosition.x + currentPosition.width - e.clientX;
           const secondRect: RectangleType = {
             id: secondId,
             X: secondX,
@@ -187,16 +190,18 @@ export default function Rectangle({
           ]);
         }
         if (cutX && cutY) {
-          const topHeight = e.clientY - rect.y;
-          const bottomHeight = rect.bottom - e.clientY;
-          const leftWidth = e.clientX - rect.x;
-          const rightWidth = rect.right - e.clientX;
+          const topHeight = e.clientY - currentPosition.y;
+          const bottomHeight =
+            currentPosition.y + currentPosition.height - e.clientY;
+          const leftWidth = e.clientX - currentPosition.x;
+          const rightWidth =
+            currentPosition.x + currentPosition.width - e.clientX;
 
           const rects: RectangleType[] = [
             {
               id: randomId(),
-              X: rect.x,
-              Y: rect.y,
+              X: currentPosition.x,
+              Y: currentPosition.y,
               width: leftWidth,
               height: topHeight,
               color,
@@ -205,7 +210,7 @@ export default function Rectangle({
             {
               id: randomId(),
               X: e.clientX,
-              Y: rect.y,
+              Y: currentPosition.y,
               width: rightWidth,
               height: topHeight,
               color,
@@ -213,7 +218,7 @@ export default function Rectangle({
             },
             {
               id: randomId(),
-              X: rect.x,
+              X: currentPosition.x,
               Y: e.clientY,
               width: leftWidth,
               height: bottomHeight,
@@ -251,7 +256,6 @@ export default function Rectangle({
         grab ? "cursor-grabbing" : "cursor-grab"
       }`}
       onMouseDown={onMouseDown}
-      ref={rectRef}
       style={{
         left: `${currentPosition.x}px`,
         top: `${currentPosition.y}px`,
