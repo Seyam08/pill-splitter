@@ -1,69 +1,64 @@
-# React + TypeScript + Vite
+# ezyEvent Frontend Documentation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**ezyEvent** is a full-featured event management system built with **React.js** and powered by **Redux Toolkit (RTK) Query** for seamless state management and API interactions.
 
-Currently, two official plugins are available:
+## 🌟 Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🖱️ **Draw Rectangles** – Click and drag on the empty canvas area to create rectangles.
+- 🔄 **Move Rectangles** – Drag existing rectangles to reposition them anywhere on the canvas.
+- ✂️ **Split Rectangles** – Click inside a rectangle to split it:
+  - 2-way horizontal split
+  - 2-way vertical split
+  - 4-way split
+- 🧹 **Clear All** – Use the dedicated control button to remove all rectangles from the canvas.
+- 🎯 **Visual Feedback** – Crosshairs and live drawing previews for a smoother user experience.
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- ⚛️ **React** (with **TypeScript**) – For building interactive UI components
+- 🎨 **Tailwind CSS** – For modern and responsive styling
+- ⚡ **Vite** – For fast development and bundling
+- 🖥️ **Vanilla Implementation** – No external libraries for canvas logic, everything built from scratch
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+  ![React.js](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+  ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+  ![TailwindCSS](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Install this app with npm
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. Clone the repository:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+   ```
+   git clone https://github.com/Seyam08/pill-splitter.git
+   ```
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. Install the dependencies:
+
+   ```
+   npm install
+   ```
+
+3. Start the application:
+
+   Development version
+
+   ```
+   npm run dev
+   ```
+
+   build command
+
+   ```
+   npm run build
+   ```
+
+   preview command
+
+   ```
+   npm run preview
+   ```
+
+4. Open the package.json file to see all the scripts.
