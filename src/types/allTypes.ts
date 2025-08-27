@@ -25,7 +25,6 @@ export type RectangleProps = {
   borderRadius: string;
   id: string;
   color: string;
-  isDrawing: boolean;
   draggingRef: React.RefObject<boolean>;
   setIsInside: React.Dispatch<React.SetStateAction<boolean>>;
   setRectangleList: React.Dispatch<React.SetStateAction<RectangleType[]>>;

@@ -1,4 +1,4 @@
-import { useRef, useState, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import ClearAll from "../ClearAll/ClearAll";
 import CrossLine from "../CrossLine/CrossLine";
 import Rectangle from "../Rectangle/Rectangle";
@@ -59,7 +59,137 @@ export default function DragRectangle(): JSX.Element {
     setTimeout(() => (draggingRef.current = false), 0);
   };
 
-  // console.log(rectangleList);
+  const onClickHandler = (e: MouseEvent): void => {
+    if (draggingRef.current) return;
+
+    setRectangleList((prev) => {
+      let newRects: RectangleType[] = [];
+
+      prev.forEach((rect) => {
+        const cutX = e.clientX > rect.X && e.clientX < rect.X + rect.width;
+        const cutY = e.clientY > rect.Y && e.clientY < rect.Y + rect.height;
+
+        if (cutX || cutY) {
+          if (cutX && cutY) {
+            // split into 4
+            const topHeight = e.clientY - rect.Y;
+            const bottomHeight = rect.height - topHeight;
+            const leftWidth = e.clientX - rect.X;
+            const rightWidth = rect.width - leftWidth;
+
+            newRects.push(
+              {
+                id: randomId(),
+                X: rect.X,
+                Y: rect.Y,
+                width: leftWidth,
+                height: topHeight,
+                color: rect.color,
+                borderRadius: `${rect.borderRadius.split(" ")[0]} 0 0 0`,
+              },
+              {
+                id: randomId(),
+                X: e.clientX,
+                Y: rect.Y,
+                width: rightWidth,
+                height: topHeight,
+                color: rect.color,
+                borderRadius: `0 ${rect.borderRadius.split(" ")[1]} 0 0`,
+              },
+              {
+                id: randomId(),
+                X: rect.X,
+                Y: e.clientY,
+                width: leftWidth,
+                height: bottomHeight,
+                color: rect.color,
+                borderRadius: `0 0 0 ${rect.borderRadius.split(" ")[3]}`,
+              },
+              {
+                id: randomId(),
+                X: e.clientX,
+                Y: e.clientY,
+                width: rightWidth,
+                height: bottomHeight,
+                color: rect.color,
+                borderRadius: `0 0 ${rect.borderRadius.split(" ")[2]} 0`,
+              }
+            );
+          } else if (cutX) {
+            // vertical split
+            const leftWidth = e.clientX - rect.X;
+            const rightWidth = rect.width - leftWidth;
+
+            newRects.push(
+              {
+                id: randomId(),
+                X: rect.X,
+                Y: rect.Y,
+                width: leftWidth,
+                height: rect.height,
+                color: rect.color,
+                borderRadius: `${rect.borderRadius.split(" ")[0]} 0 0 ${
+                  rect.borderRadius.split(" ")[3]
+                }`,
+              },
+              {
+                id: randomId(),
+                X: e.clientX,
+                Y: rect.Y,
+                width: rightWidth,
+                height: rect.height,
+                color: rect.color,
+                borderRadius: `0 ${rect.borderRadius.split(" ")[1]} ${
+                  rect.borderRadius.split(" ")[2]
+                } 0`,
+              }
+            );
+          } else if (cutY) {
+            // horizontal split
+            const topHeight = e.clientY - rect.Y;
+            const bottomHeight = rect.height - topHeight;
+
+            newRects.push(
+              {
+                id: randomId(),
+                X: rect.X,
+                Y: rect.Y,
+                width: rect.width,
+                height: topHeight,
+                color: rect.color,
+                borderRadius: `${rect.borderRadius.split(" ")[0]} ${
+                  rect.borderRadius.split(" ")[1]
+                } 0 0`,
+              },
+              {
+                id: randomId(),
+                X: rect.X,
+                Y: e.clientY,
+                width: rect.width,
+                height: bottomHeight,
+                color: rect.color,
+                borderRadius: `0 0 ${rect.borderRadius.split(" ")[2]} ${
+                  rect.borderRadius.split(" ")[3]
+                }`,
+              }
+            );
+          }
+        } else {
+          // no cut → keep rectangle as is
+          newRects.push(rect);
+        }
+      });
+
+      return newRects;
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("click", onClickHandler);
+    return () => {
+      window.removeEventListener("click", onClickHandler);
+    };
+  }, []);
 
   return (
     <>
@@ -82,7 +212,6 @@ export default function DragRectangle(): JSX.Element {
                 borderRadius={rect.borderRadius}
                 id={rect.id}
                 color={rect.color}
-                isDrawing={isDrawing}
                 draggingRef={draggingRef}
                 setIsInside={setIsInside}
                 setRectangleList={setRectangleList}
