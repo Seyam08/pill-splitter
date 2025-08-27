@@ -1,6 +1,6 @@
-# ezyEvent Frontend Documentation
+# Pill Splitter Documentation
 
-**ezyEvent** is a full-featured event management system built with **React.js** and powered by **Redux Toolkit (RTK) Query** for seamless state management and API interactions.
+**A practice project** originally given as an interview task by **Pathao**. Although I couldn’t participate at that time due to academic exams, I later took it as a personal challenge and successfully completed it. The task was designed with a tight 12-hour deadline, but I invested about 24–30 hours over 3 days to build and refine the solution. This project pushed me to handle complex canvas interactions from scratch using **React, TypeScript, and Tailwind CSS**.
 
 ## 🌟 Key Features
 
