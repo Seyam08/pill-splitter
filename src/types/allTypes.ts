@@ -17,6 +17,7 @@ export type Position = {
   height: number;
   width: number;
 };
+export type dragOffset = Omit<Position, "height" | "width">;
 export type RectangleProps = {
   left: number;
   top: number;

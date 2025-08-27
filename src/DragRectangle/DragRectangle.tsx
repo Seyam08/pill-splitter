@@ -19,15 +19,15 @@ export default function DragRectangle(): JSX.Element {
   const [rectangleList, setRectangleList] = useState<RectangleType[]>([]); // for creating array of rectangle
 
   const [color, setColor] = useState<string>("gray");
-  const [id, setId] = useState<string>("");
-  const draggingRef = useRef(false);
+  const [id, setId] = useState<string>(""); // to preserve a random id for rectangle
+  const draggingRef = useRef(false); // for tracking drag
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (isInside) {
-      return;
+      return; // retuning so that dragging can't be start inside of a rectangle
     }
     setIsDrawing(true);
-    startPoint.current = { X: e.clientX, Y: e.clientY };
+    startPoint.current = { X: e.clientX, Y: e.clientY }; // holding the start value while starting to draw
     setColor(getRandomColor());
     const id = randomId();
     setId(id);
@@ -35,7 +35,8 @@ export default function DragRectangle(): JSX.Element {
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (isDrawing && !isInside) {
-      draggingRef.current = true;
+      // only execute if drawing started and not inside of any rectangle
+      draggingRef.current = true; // for tracking drag
       const x = Math.min(e.clientX, startPoint.current.X);
       const y = Math.min(e.clientY, startPoint.current.Y);
       const w = Math.abs(e.clientX - startPoint.current.X);
@@ -54,34 +55,38 @@ export default function DragRectangle(): JSX.Element {
   };
 
   const onMouseUp = (): void => {
-    setIsDrawing(false);
-    rectangle && setRectangleList((prev) => [...prev, rectangle]);
-    setRectangle(null);
-    setTimeout(() => (draggingRef.current = false), 0);
+    setIsDrawing(false); // drawing finished
+    rectangle && setRectangleList((prev) => [...prev, rectangle]); // if rectangle exists, add it to the list
+    setRectangle(null); // resting the drawn rectangle
+    setTimeout(() => (draggingRef.current = false), 0); // setting drag false cause drag finished and using setTimeout to update state at last
   };
 
   const onClickHandler = (e: MouseEvent): void => {
-    if (draggingRef.current) return;
+    if (draggingRef.current) return; // returning if dragging is in progress
 
-    setRectangleList((prev) => {
+    setRectangleList((prev: RectangleType[]): RectangleType[] => {
+      // setting new rectangle list
       let newRects: RectangleType[] = [];
 
-      prev.forEach((rect) => {
-        const cutX = e.clientX > rect.X && e.clientX < rect.X + rect.width;
-        const cutY = e.clientY > rect.Y && e.clientY < rect.Y + rect.height;
-        const measure = 40;
+      prev.forEach((rect: RectangleType): void => {
+        // looping every rectangle for tracking cut on rectangles
+        const cutX = e.clientX > rect.X && e.clientX < rect.X + rect.width; // checking if cut done from X axis
+        const cutY = e.clientY > rect.Y && e.clientY < rect.Y + rect.height; // checking if cut done from Y axis
+        const measure: number =
+          import.meta.env.VITE_SMALLEST_RECTANGLE_SIZE || 40; // holding a measure for smallest rectangle size
 
         if (cutX || cutY) {
+          // will execute if any axis cut detected
           if (cutX && cutY) {
             // 4-way split
             const topHeight = e.clientY - rect.Y;
             const bottomHeight = rect.height - topHeight;
             const leftWidth = e.clientX - rect.X;
             const rightWidth = rect.width - leftWidth;
-            const measure = 60;
+            const measure: number = 40;
             // check too small
             if (rect.width < measure || rect.height < measure) {
-              newRects.push(moveIfTooSmall(rect, measure));
+              newRects.push(moveIfTooSmall(rect, measure)); // if rectangle is smaller then measure then move it
             } else {
               const firstRect: RectangleType = {
                 id: randomId(),
@@ -120,14 +125,15 @@ export default function DragRectangle(): JSX.Element {
                 borderRadius: `0 0 ${rect.borderRadius.split(" ")[2]} 0`,
               };
 
-              newRects.push(firstRect, secondRect, thirdRect, fourthRect);
+              newRects.push(firstRect, secondRect, thirdRect, fourthRect); // adding all 4 into rectangles
             }
           } else if (cutX) {
+            // 2 way horizontal split, if cut done by X axis
             const leftWidth = e.clientX - rect.X;
             const rightWidth = rect.width - leftWidth;
 
             if (rect.width < measure) {
-              newRects.push(moveIfTooSmall(rect, measure));
+              newRects.push(moveIfTooSmall(rect, measure)); // if rectangle is smaller then measure then move it
             } else {
               const firstRect: RectangleType = {
                 id: randomId(),
@@ -152,14 +158,15 @@ export default function DragRectangle(): JSX.Element {
                 } 0`,
               };
 
-              newRects.push(firstRect, secondRect);
+              newRects.push(firstRect, secondRect); // adding 2 into rectangles
             }
           } else if (cutY) {
+            // 2 way vertical split, if cut done by Y axis
             const topHeight = e.clientY - rect.Y;
             const bottomHeight = rect.height - topHeight;
 
             if (rect.height < measure) {
-              newRects.push(moveIfTooSmall(rect, measure));
+              newRects.push(moveIfTooSmall(rect, measure)); // if rectangle is smaller then measure then move it
             } else {
               const firstRect: RectangleType = {
                 id: randomId(),
@@ -184,25 +191,25 @@ export default function DragRectangle(): JSX.Element {
                 }`,
               };
 
-              newRects.push(firstRect, secondRect);
+              newRects.push(firstRect, secondRect); //adding 2 into rectangles
             }
           }
         } else {
-          // no cut → keep rectangle as is
+          // if no cut detected then keep the old one
           newRects.push(rect);
         }
       });
 
-      return newRects;
+      return newRects; // return new rectangles that will be set via setRectangles
     });
   };
 
   useEffect(() => {
-    window.addEventListener("click", onClickHandler);
+    window.addEventListener("click", onClickHandler); // adding event listener
     return () => {
-      window.removeEventListener("click", onClickHandler);
+      window.removeEventListener("click", onClickHandler); // removing event listener on unmount
     };
-  }, []);
+  }, []); // no dependency, cause want to run only on didMount and unmount
 
   return (
     <>
@@ -212,7 +219,7 @@ export default function DragRectangle(): JSX.Element {
         onMouseMove={onMouseMove}
         className="bg-blue-200 cursor-crosshair h-screen w-screen relative"
       >
-        <CrossLine />
+        <CrossLine /> {/* cross line on entire screen following cursor */}
         {rectangleList.map(
           (rect: RectangleType, index: number): JSX.Element => {
             return (
@@ -232,6 +239,7 @@ export default function DragRectangle(): JSX.Element {
             );
           }
         )}
+        {/* for only showing when rectangle is being drawn */}
         {rectangle && (
           <RectangleDraw
             height={rectangle.height}
@@ -242,6 +250,7 @@ export default function DragRectangle(): JSX.Element {
             color={rectangle.color}
           />
         )}
+        {/* Clear all rectangles button */}
         <ClearAll setRectangleList={setRectangleList} />
       </div>
     </>
